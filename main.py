@@ -71,7 +71,7 @@ def add_word_count(df: pd.DataFrame) -> None:
 
 
 def stats_by_word_count(df: pd.DataFrame) -> pd.DataFrame:
-    """Function make DataFrame with information about average number of word to everu mark
+    """Function make DataFrame with information about average number of word to every mark
 
     Args:
         df (pd.DataFrame): DataFrame with text information
@@ -110,14 +110,14 @@ def sort_by_num(df: pd.DataFrame, num: str) -> pd.DataFrame:
     return new_df
 
 
-def preprocess_text(text: str) -> str:
+def preprocess_text(text: str) -> List[str]:
     """Function gets text, lemmatize them and removes stopwords
 
     Args:
         text (str): text for preprocess 
 
     Returns:
-        str: preprocessed text
+        List[str]: preprocessed text
     """
     tokens = mystem.lemmatize(text.lower())
     tokens = [token for token in tokens if token not in russian_stopwords]
@@ -125,14 +125,14 @@ def preprocess_text(text: str) -> str:
     return tokens
 
 
-def preprocess_text_only_A(text: str) -> str:
+def preprocess_text_only_A(text: str) -> List[str]:
     """Function gets text, lemmatize them and removes all word without adjective and adverb
 
     Args:
         text (str): text for preprocess
 
     Returns:
-        str: preprocessed text
+        List[str]: preprocessed text
     """
     tokens = mystem.lemmatize(text.lower())
     tokens = [token for token in tokens if token not in russian_stopwords]
@@ -205,7 +205,7 @@ def graph_build(hist_list: Dict[str, int]) -> None:
         words.append(hist_list[i][0])
         count.append(hist_list[i][1])
 
-    ax = plt.subplots()
+    fig, ax = plt.subplots()
 
     y_pos = np.arange(len(words))
 
