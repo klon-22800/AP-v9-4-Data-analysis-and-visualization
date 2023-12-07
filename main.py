@@ -10,10 +10,11 @@ import nltk
 import lab_2_1
 
 from typing import List, Dict
+from collections import Counter
 
 from nltk.corpus import stopwords
 from pymystem3 import Mystem
-from collections import Counter
+
 
 mystem = Mystem()
 russian_stopwords = stopwords.words("russian")
@@ -219,16 +220,35 @@ def graph_build(hist_list: Dict[str, int]) -> None:
 
 
 if __name__ == "__main__":
-    df = make_df('dataset')
-    add_word_count(df)
-    print('----')
-    print(df)
-    print('----')
-    print(stats_by_word_count(df))
-    print(sort_by_word_count(df, 100))
-    print(sort_by_num(df, '5'))
-    print(preprocess_text(''))
-    print(group_by_num(df))
-    hist = make_histogram(df, "1")
+    # df = make_df('dataset')
+    # add_word_count(df)
+    # print('----')
+    # print(df)
+    # print('----')
+    # print(stats_by_word_count(df))
+    # print(sort_by_word_count(df, 100))
+    # print(sort_by_num(df, '5'))
+    # print(preprocess_text(''))
+    # print(group_by_num(df))
+    # hist = make_histogram(df, "1")
 
-    graph_build(hist)
+    # graph_build(hist)
+    df = pd.read_csv('full_data.csv')
+    df = df.drop(df.columns[[0]], axis = 1)
+    df = df.dropna()
+    print(df)
+    for i in range(5000):
+        text = re.sub(r"[^\w\s]", "", df.iloc[i,1])
+        tokens = mystem.lemmatize(text.lower())
+        tokens = [token for token in tokens if token not in russian_stopwords]
+        text = " ".join(tokens)
+        words = nltk.word_tokenize(text)
+        functors_pos = {'A=m', 'ADV'}
+        res = [word for word, pos in nltk.pos_tag(words, lang='rus')
+           if pos in functors_pos]
+        res_text = " ".join(res)
+        print(res_text)
+        df.iloc[i,1] = res_text
+        print(i)
+    print(df)   
+    df.to_csv('full_data_lemm_A.csv')
